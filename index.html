@@ -86,7 +86,7 @@
                         
 							
                         <li>
-                            <a href="/Categories/">Categories</a>
+                            <a href="/Tags/">Tags</a>
                         </li>
 							
 						
@@ -94,7 +94,7 @@
                         
 							
                         <li>
-                            <a href="/Tags/">Tags</a>
+                            <a href="/Categories/">Categories</a>
                         </li>
 							
 						
@@ -298,7 +298,9 @@
         <div class="post-content-preview">
             <p>
                 您计划系统性地梳理全球投资体系，这是一个很好的起点。以下这张概览图可以帮助您快速建立对全球可投资标的的整体印象：它将主要资产分为传统的股票、债券，以及另类投资中的实物与金融资产，并列出了一些关键的代表性产品。
-1234567891011121314graph LR    subgraph C[传..
+graph LR
+    subgraph C[传统金融资产]
+        A1[..
             </p>
         </div>
     </a>
@@ -574,17 +576,23 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
 <script>
     $(document).ready(function() {
-        mermaid.initialize({startOnLoad:true});
-        
-        // Re-render mermaid diagrams after page load
-        $('pre[lang="mermaid"]').each(function(index, element) {
-            var diagramCode = $(element).text().trim();
-            var diagramDiv = $('<div class="mermaid">' + diagramCode + '</div>');
-            $(element).replaceWith(diagramDiv);
+        if (!window.mermaid) {
+            return;
+        }
+
+        $('figure.highlight.plaintext').each(function(index, element) {
+            var lines = $(element).find('td.code .line').map(function() {
+                return $(this).text();
+            }).get();
+            var diagramCode = lines.join('\n').trim();
+
+            if (/^(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey|gitGraph|mindmap|timeline|quadrantChart|requirementDiagram)\b/.test(diagramCode)) {
+                $(element).replaceWith($('<pre class="mermaid"></pre>').text(diagramCode));
+            }
         });
-        
-        // Initialize all mermaid diagrams
-        mermaid.init(undefined, '.mermaid');
+
+        mermaid.initialize({ startOnLoad: false });
+        mermaid.run({ querySelector: '.mermaid' });
     });
 </script>
 

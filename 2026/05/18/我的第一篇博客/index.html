@@ -86,7 +86,7 @@
                         
 							
                         <li>
-                            <a href="/Categories/">Categories</a>
+                            <a href="/Tags/">Tags</a>
                         </li>
 							
 						
@@ -94,7 +94,7 @@
                         
 							
                         <li>
-                            <a href="/Tags/">Tags</a>
+                            <a href="/Categories/">Categories</a>
                         </li>
 							
 						
@@ -342,17 +342,23 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
 <script>
     $(document).ready(function() {
-        mermaid.initialize({startOnLoad:true});
-        
-        // Re-render mermaid diagrams after page load
-        $('pre[lang="mermaid"]').each(function(index, element) {
-            var diagramCode = $(element).text().trim();
-            var diagramDiv = $('<div class="mermaid">' + diagramCode + '</div>');
-            $(element).replaceWith(diagramDiv);
+        if (!window.mermaid) {
+            return;
+        }
+
+        $('figure.highlight.plaintext').each(function(index, element) {
+            var lines = $(element).find('td.code .line').map(function() {
+                return $(this).text();
+            }).get();
+            var diagramCode = lines.join('\n').trim();
+
+            if (/^(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey|gitGraph|mindmap|timeline|quadrantChart|requirementDiagram)\b/.test(diagramCode)) {
+                $(element).replaceWith($('<pre class="mermaid"></pre>').text(diagramCode));
+            }
         });
-        
-        // Initialize all mermaid diagrams
-        mermaid.init(undefined, '.mermaid');
+
+        mermaid.initialize({ startOnLoad: false });
+        mermaid.run({ querySelector: '.mermaid' });
     });
 </script>
 
