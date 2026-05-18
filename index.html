@@ -570,6 +570,24 @@
 <script src="/js/blog.js"></script>
 
 
+<!-- Mermaid -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+<script>
+    $(document).ready(function() {
+        mermaid.initialize({startOnLoad:true});
+        
+        // Re-render mermaid diagrams after page load
+        $('pre[lang="mermaid"]').each(function(index, element) {
+            var diagramCode = $(element).text().trim();
+            var diagramDiv = $('<div class="mermaid">' + diagramCode + '</div>');
+            $(element).replaceWith(diagramDiv);
+        });
+        
+        // Initialize all mermaid diagrams
+        mermaid.init(undefined, '.mermaid');
+    });
+</script>
+
 <!-- async load function -->
 <script>
     function async(u, c) {
